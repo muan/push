@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#111">
+  <title>Push — muan HQ</title>
+  <meta name="vapid-public-key" content="BNWvv7UBX9Z1u3MdGQit7xRETUJ2nYi3NqDUngbzLDxv72ZFHgAn89HLQundizYJ8qDzP63XOwEFGwcXyabHuhI">
+  <meta name="github-repo" content="muan/push">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+    * { margin: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, system-ui, sans-serif;
+      background: #111;
+      color: #eee;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 2rem;
+    }
+    main {
+      max-width: 28rem;
+      width: 100%;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .subtitle {
+      font-size: 0.875rem;
+      color: #888;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    p { line-height: 1.5; margin-bottom: 1rem; color: #aaa; }
+    ol {
+      list-style: none;
+      padding: 0;
+      color: #aaa;
+      counter-reset: steps;
+    }
+    ol li {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0;
+      line-height: 1.4;
+      counter-increment: steps;
+    }
+    ol li::before {
+      content: counter(steps) ".";
+      flex-shrink: 0;
+      width: 1.5rem;
+      color: #555;
+      font-variant-numeric: tabular-nums;
+    }
+    ol li svg, ol li img {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+    ol li img {
+      border-radius: 4px;
+    }
+    button {
+      appearance: none;
+      border: none;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    button:active { opacity: 0.8; }
+    button:focus-visible {
+      outline: 2px solid #FFD60A;
+      outline-offset: 2px;
+    }
+    button svg { flex-shrink: 0; }
+    button.secondary {
+      background: #333;
+      color: #eee;
+      font-size: 0.875rem;
+    }
+    button.danger {
+      background: transparent;
+      color: #f66;
+      border: 1px solid #f66;
+    }
+    .status-granted {
+      color: #6c6;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    .status-denied {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      background: #2a1a1a;
+      color: #f66;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    .admin {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #333;
+    }
+    .admin summary {
+      font-size: 0.75rem;
+      color: #888;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+    }
+    .admin summary:focus-visible {
+      outline: 2px solid #FFD60A;
+      outline-offset: 2px;
+    }
+    pre {
+      background: #1a1a1a;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: #aaa;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-bottom: 0.75rem;
+    }
+    code { font-family: ui-monospace, monospace; }
+    .app-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+    footer {
+      max-width: 28rem;
+      width: 100%;
+      margin-top: 3rem;
+      font-size: 0.75rem;
+      color: #888;
+      letter-spacing: 0.02em;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="icon-192.png" alt="" class="app-icon">
+    <h1>Push</h1>
+    <p class="subtitle">muan HQ</p>
+
+    <section id="homescreen-prompt" aria-labelledby="setup-heading">
+      <h2 id="setup-heading" class="sr-only">Setup</h2>
+      <p>This web app allows an iOS device to receive push notifications through the Web Push API in browsers.</p>
+      <ol>
+        <li>
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          Tap the share button in Safari
+        </li>
+        <li>
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Select "Add to Home Screen"
+        </li>
+        <li>
+          <img src="icon-192.png" alt="" width="20" height="20">
+          Open the app from your Home Screen
+        </li>
+      </ol>
+    </section>
+
+    <section id="unsupported" class="hidden" aria-labelledby="unsupported-heading">
+      <h2 id="unsupported-heading" class="sr-only">Unsupported browser</h2>
+      <p>Notifications are not supported in this browser.</p>
+    </section>
+
+    <section id="permission-ui" class="hidden" aria-labelledby="permission-heading">
+      <h2 id="permission-heading" class="sr-only">Notification permissions</h2>
+      <p id="status-granted" class="status-granted hidden" role="status">
+        You're all set! You can now receive notifications.
+      </p>
+      <div id="status-denied" class="status-denied hidden" role="alert">
+        Notifications were blocked. You can reset this in Settings &gt; Safari &gt; Notifications.
+      </div>
+      <button id="btn-enable" class="hidden">Allow notifications</button>
+      <button id="btn-share" class="hidden">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        <span>Share subscription details</span>
+      </button>
+      <button id="btn-revoke" class="danger hidden">Stop notifications</button>
+    </section>
+
+    <details id="instructions" class="admin hidden">
+      <summary>Admin: Send a notification</summary>
+      <pre><code id="curl-example"></code></pre>
+      <button id="btn-copy-curl" class="secondary">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span>Copy command</span>
+      </button>
+    </details>
+  </main>
+
+  <footer>Made with vibes.</footer>
+
+  <div aria-live="polite" aria-atomic="true" class="sr-only" id="live-region"></div>
+
+  <script>
+    const VAPID_PUBLIC_KEY = document.querySelector('meta[name="vapid-public-key"]').content;
+    const GITHUB_REPO = document.querySelector('meta[name="github-repo"]')?.content;
+
+    const $ = (id) => document.getElementById(id);
+    const show = (el) => el.classList.remove('hidden');
+    const hide = (el) => el.classList.add('hidden');
+
+    function announce(message) {
+      const region = $('live-region');
+      region.textContent = '';
+      requestAnimationFrame(() => { region.textContent = message; });
+    }
+
+    const isStandalone = window.navigator.standalone === true ||
+      window.matchMedia('(display-mode: standalone)').matches;
+
+    async function init() {
+      if (!isStandalone) {
+        show($('homescreen-prompt'));
+        return;
+      }
+
+      hide($('homescreen-prompt'));
+
+      if (!('pushManager' in window)) {
+        show($('unsupported'));
+        return;
+      }
+
+      show($('permission-ui'));
+
+      updateUI();
+    }
+
+    async function updateUI() {
+      const permission = Notification.permission;
+      const subscription = await window.pushManager.getSubscription();
+
+      hide($('status-granted'));
+      hide($('status-denied'));
+      hide($('btn-enable'));
+      hide($('btn-share'));
+      hide($('btn-revoke'));
+      hide($('instructions'));
+
+      if (permission === 'denied') {
+        show($('status-denied'));
+        return;
+      }
+
+      if (permission === 'granted' && subscription) {
+        const sub = subscription.toJSON();
+        show($('status-granted'));
+        show($('btn-share'));
+        show($('btn-revoke'));
+
+        if (GITHUB_REPO) {
+          show($('instructions'));
+
+          const payload = JSON.stringify({
+            ref: 'main',
+            inputs: {
+              title: 'YOUR_TITLE',
+              body: 'YOUR_BODY',
+              subscription: JSON.stringify(sub),
+            }
+          }, null, 2);
+
+          $('curl-example').textContent =
+`curl -X POST \\
+  -H "Authorization: Bearer YOUR_GITHUB_TOKEN" \\
+  -H "Accept: application/vnd.github+json" \\
+  -H "X-GitHub-Api-Version: 2022-11-28" \\
+  https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/push.yml/dispatches \\
+  -d '${payload}'`;
+        }
+        return;
+      }
+
+      show($('btn-enable'));
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - base64String.length % 4) % 4);
+      const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+      const raw = atob(base64);
+      const arr = new Uint8Array(raw.length);
+      for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+      return arr;
+    }
+
+    $('btn-enable').addEventListener('click', async () => {
+      try {
+        await window.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        });
+      } catch (e) {
+        console.error('Subscribe failed:', e);
+      }
+      updateUI();
+    });
+
+    $('btn-share').addEventListener('click', async () => {
+      const subscription = await window.pushManager.getSubscription();
+      if (!subscription) return;
+      const text = JSON.stringify(subscription.toJSON());
+      if (navigator.share) {
+        await navigator.share({ text });
+      } else {
+        await navigator.clipboard.writeText(text);
+        const span = $('btn-share').querySelector('span');
+        span.textContent = 'Copied!';
+        announce('Copied to clipboard');
+        setTimeout(() => { span.textContent = 'Share subscription details'; }, 1500);
+      }
+    });
+
+    $('btn-copy-curl').addEventListener('click', async () => {
+      await navigator.clipboard.writeText($('curl-example').textContent);
+      const span = $('btn-copy-curl').querySelector('span');
+      span.textContent = 'Copied!';
+      announce('Copied to clipboard');
+      setTimeout(() => { span.textContent = 'Copy command'; }, 1500);
+    });
+
+    $('btn-revoke').addEventListener('click', async () => {
+      const subscription = await window.pushManager.getSubscription();
+      if (subscription) await subscription.unsubscribe();
+      updateUI();
+    });
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+name: Send Push Notification
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: Notification title
+        required: true
+      body:
+        description: Notification body
+        required: false
+        default: ""
+      subscription:
+        description: Push subscription JSON
+        required: true
+      navigate:
+        description: URL or URL scheme to open on tap
+        required: false
+        default: "com.apple.home://"
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/cache@v6
+        id: cache
+        with:
+          path: node_modules
+          key: node-modules-web-push-3.6.7
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install web-push@3.6.7
+      - name: Send notification
+        env:
+          VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_SUBJECT: ${{ secrets.VAPID_SUBJECT }}
+          INPUT_TITLE: ${{ inputs.title }}
+          INPUT_BODY: ${{ inputs.body }}
+          INPUT_SUBSCRIPTION: ${{ inputs.subscription }}
+          INPUT_NAVIGATE: ${{ inputs.navigate }}
+        run: node send.js
