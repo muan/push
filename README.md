@@ -1,7 +1,7 @@
 # Push
 
 > [!IMPORTANT]
-> This is almost entirely vibe-coded with Claude and reviewed humanly by me. Reading through the code should take less than 5 minutes.
+> This is almost entirely vibe-coded with Claude (except this README) and reviewed humanly by me. Reading through the code should take less than 5 minutes.
 
 ---
 
