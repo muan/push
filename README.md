@@ -22,13 +22,17 @@ Built with Safari's [Declarative Web Push](https://webkit.org/blog/16535/meet-de
 
 ## Use case
 
+Clare (you, potentially) is Mu-An's neighbor who has a cat called Chi-chi. Mu-An would like to be notified every time Chi-chi is out on the balcony. Clare has a camera with animal detection feature, and Mu-An has an iPhone and view of Clare's balcony. 
+
 ### Setup
 
-**Mu-An** goes to `index.html` via HTTPS → **Mu-An** subscribes and gives **you** the payload → **You** put the payload into the installed Shortcut, and setup whatever automation.
+**Clare** forks and setup this repository.
+
+**Mu-An** goes to `index.html` via HTTPS → **Mu-An** subscribes and gives **Clare** the payload → **Clare** puts the payload into the installed Shortcut, and setup the automation to run the shortcut when triggered.
 
 ### Result
 
-Automation calls GitHub Action API → GitHub Actions runs `send.js` to push notify **Mu-An**.
+Automation calls GitHub Action API → GitHub Actions runs `send.js` to push notify **Mu-An** that Chi-chi is on Clare's balcony.
 
 ## Workflow
 
