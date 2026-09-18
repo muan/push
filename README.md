@@ -34,7 +34,7 @@ Clare (you, potentially) is Mu-An's neighbor who has a cat called Chi-chi. Mu-An
 
 Automation calls GitHub Action API → GitHub Actions runs `send.js` to push notify **Mu-An** that Chi-chi is on Clare's balcony.
 
-Reusable: Clare's new girlfriend found out about this, and would also like to be notified with Chi-chi's whereabouts. She also goes to the web page to subscribe and Clare adds the payload to the automation.
+Reusable: Clare's new girlfriend finds out about this, and would also like to be notified with Chi-chi's whereabouts. She goes to the web page to subscribe, and Clare adds her subscription payload to the automation.
 
 ## Workflow
 
